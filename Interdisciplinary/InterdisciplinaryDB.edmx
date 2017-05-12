@@ -1,0 +1,268 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="interdisciplinaryDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="customer">
+          <Key>
+            <PropertyRef Name="custID" />
+          </Key>
+          <Property Name="custID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="email" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="phonenr" Type="varchar" MaxLength="8" />
+        </EntityType>
+        <EntityType Name="lineitem">
+          <Key>
+            <PropertyRef Name="lineitemid" />
+          </Key>
+          <Property Name="lineitemid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="price" Type="decimal" Precision="10" Scale="2" Nullable="false" />
+          <Property Name="description" Type="varchar" MaxLength="250" />
+        </EntityType>
+        <EntityType Name="orderline">
+          <Key>
+            <PropertyRef Name="orderLineID" />
+          </Key>
+          <Property Name="orderLineID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="quantity" Type="int" Nullable="false" />
+          <Property Name="lineitemid" Type="int" />
+          <Property Name="reservationid" Type="int" />
+        </EntityType>
+        <EntityType Name="reservation">
+          <Key>
+            <PropertyRef Name="reservationID" />
+          </Key>
+          <Property Name="reservationID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="custID" Type="int" />
+          <Property Name="datecreated" Type="date" Nullable="false" />
+          <Property Name="delivery_address" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <Association Name="FK__orderline__linei__4CA06362">
+          <End Role="lineitem" Type="Self.lineitem" Multiplicity="0..1" />
+          <End Role="orderline" Type="Self.orderline" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="lineitem">
+              <PropertyRef Name="lineitemid" />
+            </Principal>
+            <Dependent Role="orderline">
+              <PropertyRef Name="lineitemid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__orderline__reser__4D94879B">
+          <End Role="reservation" Type="Self.reservation" Multiplicity="0..1" />
+          <End Role="orderline" Type="Self.orderline" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="reservation">
+              <PropertyRef Name="reservationID" />
+            </Principal>
+            <Dependent Role="orderline">
+              <PropertyRef Name="reservationid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__reservati__custI__49C3F6B7">
+          <End Role="customer" Type="Self.customer" Multiplicity="0..1" />
+          <End Role="reservation" Type="Self.reservation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="customer">
+              <PropertyRef Name="custID" />
+            </Principal>
+            <Dependent Role="reservation">
+              <PropertyRef Name="custID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="interdisciplinaryDBModelStoreContainer">
+          <EntitySet Name="customer" EntityType="Self.customer" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="lineitem" EntityType="Self.lineitem" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="orderline" EntityType="Self.orderline" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="reservation" EntityType="Self.reservation" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__orderline__linei__4CA06362" Association="Self.FK__orderline__linei__4CA06362">
+            <End Role="lineitem" EntitySet="lineitem" />
+            <End Role="orderline" EntitySet="orderline" />
+          </AssociationSet>
+          <AssociationSet Name="FK__orderline__reser__4D94879B" Association="Self.FK__orderline__reser__4D94879B">
+            <End Role="reservation" EntitySet="reservation" />
+            <End Role="orderline" EntitySet="orderline" />
+          </AssociationSet>
+          <AssociationSet Name="FK__reservati__custI__49C3F6B7" Association="Self.FK__reservati__custI__49C3F6B7">
+            <End Role="customer" EntitySet="customer" />
+            <End Role="reservation" EntitySet="reservation" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="interdisciplinaryDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="customer">
+          <Key>
+            <PropertyRef Name="custID" />
+          </Key>
+          <Property Name="custID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="phonenr" Type="String" MaxLength="8" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="reservations" Relationship="Self.FK__reservati__custI__49C3F6B7" FromRole="customer" ToRole="reservation" />
+        </EntityType>
+        <EntityType Name="lineitem">
+          <Key>
+            <PropertyRef Name="lineitemid" />
+          </Key>
+          <Property Name="lineitemid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="price" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
+          <Property Name="description" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="orderlines" Relationship="Self.FK__orderline__linei__4CA06362" FromRole="lineitem" ToRole="orderline" />
+        </EntityType>
+        <EntityType Name="orderline">
+          <Key>
+            <PropertyRef Name="orderLineID" />
+          </Key>
+          <Property Name="orderLineID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="quantity" Type="Int32" Nullable="false" />
+          <Property Name="lineitemid" Type="Int32" />
+          <Property Name="reservationid" Type="Int32" />
+          <NavigationProperty Name="lineitem" Relationship="Self.FK__orderline__linei__4CA06362" FromRole="orderline" ToRole="lineitem" />
+          <NavigationProperty Name="reservation" Relationship="Self.FK__orderline__reser__4D94879B" FromRole="orderline" ToRole="reservation" />
+        </EntityType>
+        <EntityType Name="reservation">
+          <Key>
+            <PropertyRef Name="reservationID" />
+          </Key>
+          <Property Name="reservationID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="custID" Type="Int32" />
+          <Property Name="datecreated" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="delivery_address" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="customer" Relationship="Self.FK__reservati__custI__49C3F6B7" FromRole="reservation" ToRole="customer" />
+          <NavigationProperty Name="orderlines" Relationship="Self.FK__orderline__reser__4D94879B" FromRole="reservation" ToRole="orderline" />
+        </EntityType>
+        <Association Name="FK__reservati__custI__49C3F6B7">
+          <End Role="customer" Type="Self.customer" Multiplicity="0..1" />
+          <End Role="reservation" Type="Self.reservation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="customer">
+              <PropertyRef Name="custID" />
+            </Principal>
+            <Dependent Role="reservation">
+              <PropertyRef Name="custID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__orderline__linei__4CA06362">
+          <End Role="lineitem" Type="Self.lineitem" Multiplicity="0..1" />
+          <End Role="orderline" Type="Self.orderline" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="lineitem">
+              <PropertyRef Name="lineitemid" />
+            </Principal>
+            <Dependent Role="orderline">
+              <PropertyRef Name="lineitemid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__orderline__reser__4D94879B">
+          <End Role="reservation" Type="Self.reservation" Multiplicity="0..1" />
+          <End Role="orderline" Type="Self.orderline" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="reservation">
+              <PropertyRef Name="reservationID" />
+            </Principal>
+            <Dependent Role="orderline">
+              <PropertyRef Name="reservationid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="interdisciplinaryDBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="customers" EntityType="Self.customer" />
+          <EntitySet Name="lineitems" EntityType="Self.lineitem" />
+          <EntitySet Name="orderlines" EntityType="Self.orderline" />
+          <EntitySet Name="reservations" EntityType="Self.reservation" />
+          <AssociationSet Name="FK__reservati__custI__49C3F6B7" Association="Self.FK__reservati__custI__49C3F6B7">
+            <End Role="customer" EntitySet="customers" />
+            <End Role="reservation" EntitySet="reservations" />
+          </AssociationSet>
+          <AssociationSet Name="FK__orderline__linei__4CA06362" Association="Self.FK__orderline__linei__4CA06362">
+            <End Role="lineitem" EntitySet="lineitems" />
+            <End Role="orderline" EntitySet="orderlines" />
+          </AssociationSet>
+          <AssociationSet Name="FK__orderline__reser__4D94879B" Association="Self.FK__orderline__reser__4D94879B">
+            <End Role="reservation" EntitySet="reservations" />
+            <End Role="orderline" EntitySet="orderlines" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="interdisciplinaryDBModelStoreContainer" CdmEntityContainer="interdisciplinaryDBEntities">
+          <EntitySetMapping Name="customers">
+            <EntityTypeMapping TypeName="interdisciplinaryDBModel.customer">
+              <MappingFragment StoreEntitySet="customer">
+                <ScalarProperty Name="custID" ColumnName="custID" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="phonenr" ColumnName="phonenr" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="lineitems">
+            <EntityTypeMapping TypeName="interdisciplinaryDBModel.lineitem">
+              <MappingFragment StoreEntitySet="lineitem">
+                <ScalarProperty Name="lineitemid" ColumnName="lineitemid" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="price" ColumnName="price" />
+                <ScalarProperty Name="description" ColumnName="description" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="orderlines">
+            <EntityTypeMapping TypeName="interdisciplinaryDBModel.orderline">
+              <MappingFragment StoreEntitySet="orderline">
+                <ScalarProperty Name="orderLineID" ColumnName="orderLineID" />
+                <ScalarProperty Name="quantity" ColumnName="quantity" />
+                <ScalarProperty Name="lineitemid" ColumnName="lineitemid" />
+                <ScalarProperty Name="reservationid" ColumnName="reservationid" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="reservations">
+            <EntityTypeMapping TypeName="interdisciplinaryDBModel.reservation">
+              <MappingFragment StoreEntitySet="reservation">
+                <ScalarProperty Name="reservationID" ColumnName="reservationID" />
+                <ScalarProperty Name="custID" ColumnName="custID" />
+                <ScalarProperty Name="datecreated" ColumnName="datecreated" />
+                <ScalarProperty Name="delivery_address" ColumnName="delivery_address" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="true" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
